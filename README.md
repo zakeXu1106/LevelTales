@@ -4,7 +4,7 @@
 
 ## 仓库说明
 
-本仓库目前是**开发启动包**（尚无代码）：产品 PRD、实现规格文档与可运行的起始种子数据。编码按 `AGENTS.md` 的指引进行。
+本仓库包含产品 PRD、实现规格、起始种子数据和 iOS 启动工程。当前原型根据 Apple Intelligence 可用性进入欢迎页或不支持说明页。编码按 `AGENTS.md` 的指引进行。
 
 | 路径 | 内容 |
 |---|---|
@@ -16,6 +16,18 @@
 | `docs/prompts-and-algorithms.md` | 提示词模板 T1–T3 与算法 A1–A3（含测试向量） |
 | `docs/build-steps-and-tests.md` | 12 步实现顺序、每步验收与单元测试清单 |
 | `seed/*.json` | 种子数据起始集：词表（L1 全量 150 词 + L2 部分 60 词）、六级句型、定级题、模板故事、黑名单/同义词/主题等 |
+| `LevelTales.xcodeproj` | iOS App、单元测试 target 和共享方案 |
+
+## 运行启动原型
+
+在 macOS 上用具备 iOS 26 SDK 的 Xcode 打开 `LevelTales.xcodeproj`，选择 `LevelTales` 方案和 iOS 26 或更新版本的 iPhone 模拟器。按 `⌘R` 启动，按 `⌘U` 运行单元测试。
+
+在 Xcode 的 **Edit Scheme → Run → Arguments Passed On Launch** 中，启用一个参数后重新启动 Debug App。
+
+- `--model-available` 显示 P01 欢迎页。
+- `--model-unavailable` 显示 P15 不支持说明页，该页没有继续入口。
+
+移除这两个参数后即可在真机上验证实际模型可用性。Release 构建始终按系统能力分流。定级和手动选级入口将在对应开发步骤接入。
 
 ## 技术栈
 
