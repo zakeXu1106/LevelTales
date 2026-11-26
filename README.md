@@ -20,14 +20,32 @@
 
 ## 运行启动原型
 
-在 macOS 上用具备 iOS 26 SDK 的 Xcode 打开 `LevelTales.xcodeproj`，选择 `LevelTales` 方案和 iOS 26 或更新版本的 iPhone 模拟器。按 `⌘R` 启动，按 `⌘U` 运行单元测试。
+### 在 Mac 上准备软件
 
-在 Xcode 的 **Edit Scheme → Run → Arguments Passed On Launch** 中，启用一个参数后重新启动 Debug App。
+1. 安装带 iOS 26 SDK 的 Xcode 26 或更新版本，首次打开时完成组件安装。各 Xcode 版本支持的 macOS 版本见 [Apple Xcode 系统要求](https://developer.apple.com/support/xcode/)。
+2. 在 **Xcode → Settings → Components** 安装 iOS 26 或更新版本的 iOS Simulator 运行时。Xcode 提供 Swift 编译器和测试工具，工程无需安装第三方包或插件。
 
-- `--model-available` 显示 P01 欢迎页。
-- `--model-unavailable` 显示 P15 不支持说明页，该页没有继续入口。
+### 在模拟器切换两个启动页
 
-移除这两个参数后即可在真机上验证实际模型可用性。Release 构建始终按系统能力分流。定级和手动选级入口将在对应开发步骤接入。
+1. 用 Git 克隆仓库并切换到含启动原型的分支，已有检出可直接打开该分支下的工程。
+
+   ```bash
+   git clone --branch codex/leveltales-ios-bootstrap https://github.com/zakeXu1106/LevelTales.git
+   cd LevelTales
+   open LevelTales.xcodeproj
+   ```
+
+2. 在 Xcode 顶部选择 `LevelTales` 方案和一台 iOS 26 或更新版本的 iPhone 模拟器。模拟器运行无需设置签名团队。
+3. 打开 **Product → Scheme → Edit Scheme → Run → Arguments**，在 **Arguments Passed On Launch** 中启用 `--model-available`，按 `⌘R` 查看 P01 欢迎页。
+4. 停止 App，关闭上一个参数，改为启用 `--model-unavailable`，再按 `⌘R` 查看 P15 设备说明页。按 `⌘U` 运行默认 Debug 单元测试。
+
+后续更新时，在同一分支执行 `git pull --ff-only`，再按 `⌘R` 重新运行。当前原型可查看 P01 和 P15，定级和手动选级入口将在对应开发步骤接入。
+
+### 在 iPhone 上验证系统能力
+
+1. 使用 iOS 26 或更新版本的 iPhone。P01 的真实能力路径需要支持 Apple Intelligence 的机型，并在 **设置 → Apple Intelligence 与 Siri** 启用且等待模型就绪。
+2. 将 iPhone 连接到 Mac，在 Xcode 登录 Apple 账户，并在 App target 的 **Signing & Capabilities** 选择团队。按设备提示信任 Mac 并启用开发者模式。如果占位 Bundle ID `app.leveltales` 无法注册，在自己的检出中换成唯一 Bundle ID。
+3. 在 **Edit Scheme → Run → Arguments** 关闭两个模拟参数，选中这台 iPhone 并按 `⌘R`。模型可用时进入 P01，模型不可用时进入 P15。可从 P15 切到系统设置，完成启用并等模型就绪后返回 App，检查是否进入 P01。
 
 ## 技术栈
 
