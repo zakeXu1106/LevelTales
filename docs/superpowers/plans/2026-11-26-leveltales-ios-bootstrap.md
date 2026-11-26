@@ -45,11 +45,12 @@
 - [x] 在 `LaunchRoute.swift` 实现 `enum LaunchRoute: Equatable` 和 `static func resolve(arguments: [String], systemIsAvailable: () -> Bool) -> Self`。Debug 仅识别上述完整参数，仅一个覆盖参数生效时无需读取系统值。
 - [x] 建立共享 scheme 和两个 Xcode target，在 `LevelTalesApp` 把 `SystemLanguageModel.default.availability` 的 `.available` 映射为 true，其余映射为 false。分别挂载可滚动的 P01 与 P15。P01 展示品牌、分级阅读和本地隐私说明，P15 说明需要支持 Apple Intelligence 的 iPhone。
 - [x] 运行路由测试 Debug 和 Release，期望各 5 项通过。检查工程文件、scheme 的 target 与源码引用，并用 Swift 前端解析 SwiftUI 和测试文件。补齐 README 启动说明。
-- [ ] 在 macOS 的 Xcode 中选择 iOS 26+ 模拟器，运行 `xcodebuild test -project LevelTales.xcodeproj -scheme LevelTales -destination 'platform=iOS Simulator,id=<模拟器 UUID>'`，期望 `TEST SUCCEEDED`。分别使用两种覆盖参数启动，检查 P01、P15 的页面内容、无继续入口和大字号滚动。用支持设备确认真实能力判定。
+- [ ] 在 macOS 的 Xcode 中选择 iOS 26+ 模拟器，运行 `xcodebuild test -project LevelTales.xcodeproj -scheme LevelTales -destination 'platform=iOS Simulator,id=<模拟器 UUID>'`，期望 `TEST SUCCEEDED`。分别使用两种覆盖参数启动，检查 P01、P15 的页面内容、无继续入口和大字号滚动。移除覆盖参数后在支持机型上验证真实能力。先在系统设置关闭 Apple Intelligence，启动进入 P15，再启用并等模型就绪，返回原 App 进程应进入 P01。
 - [x] 提交已验证的工作，保留尚未运行的 Apple SDK 验收记录。
 
 ## 验证记录
 
 - Swift 6.2.3 Linux，测试先对未实现路由运行，5 项中 3 项按预期失败。
 - 接入实际路由后，Debug 和 Release 各运行 5 项，均通过。Swift 源码语法解析、工程和共享方案的 target、源码与配置检查通过。
+- 独立评审发现从设置返回时可能保留过期的模型状态，已改为 App 回到前台时重新检查。此场景纳入真机验收。
 - 当前云主机运行 Linux，macOS/Xcode 构建、iOS 模拟器页面走查和实际设备能力验证待完成。

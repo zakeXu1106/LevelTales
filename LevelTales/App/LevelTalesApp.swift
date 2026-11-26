@@ -4,21 +4,34 @@ import SwiftUI
 
 @main
 struct LevelTalesApp: App {
-    private let launchRoute = LaunchRoute.resolve(arguments: ProcessInfo.processInfo.arguments) {
-        if case .available = SystemLanguageModel.default.availability {
-            return true
-        }
-        return false
-    }
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var launchRoute = LevelTalesApp.resolveLaunchRoute()
 
     var body: some Scene {
         WindowGroup {
-            switch launchRoute {
-            case .welcome:
-                WelcomeView()
-            case .unsupported:
-                UnsupportedDeviceView()
+            Group {
+                switch launchRoute {
+                case .welcome:
+                    WelcomeView()
+                case .unsupported:
+                    UnsupportedDeviceView()
+                }
             }
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active {
+                    launchRoute = Self.resolveLaunchRoute()
+                }
+            }
+        }
+    }
+
+    private static func resolveLaunchRoute() -> LaunchRoute {
+        LaunchRoute.resolve(arguments: ProcessInfo.processInfo.arguments) {
+            // TODO(real-device): Verify availability at startup and after returning from Settings.
+            if case .available = SystemLanguageModel.default.availability {
+                return true
+            }
+            return false
         }
     }
 }
